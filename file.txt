@@ -1,3 +1,0 @@
-Reading a text file
-from a fd
-its waaaay to tedious.
