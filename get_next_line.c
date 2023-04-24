@@ -5,40 +5,41 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/23 05:57:25 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/04/23 12:24:21 by jhogonca         ###   ########.fr       */
+/*   Created: 2023/04/23 21:50:30 by jhogonca          #+#    #+#             */
+/*   Updated: 2023/04/23 21:50:30 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-
-char	*get_next_line(int fd)
+char *get_next_line(int fd)
 {
-	static char	buf[MAX][BUFFER_SIZE + 1];
-	char		*line;
-	int			readed;
+	static char	bf[FOPEN_MAX][BUFFER_SIZE + 1];
+	t_gnl		gnl;
 
-	if (fd < 0 || MAX < fd || BUFFER_SIZE < 1)
-		return (NULL);
-	line = malloc(1);
-	if (!line)
-		return (NULL);
-	line[0] = '\0';
-	readed = 1;
-	while (readed > 0)
+	gnl.line = NULL;
+	gnl.index = 1;
+	gnl.read_bytes = 0;
+	gnl.buffer_size = 0;
+
+	while (fd >= 0 && fd < FOPEN_MAX && bf[fd][gnl.buffer_size])
+		gnl.buffer_size++;
+	gnl.line_size = 0;
+	
+	while (fd >= 0 && fd < FOPEN_MAX && gnl.index > 0)
 	{
-		line = ft_strjoin(line, buf[fd]);
-		if (line == NULL)
-			return (NULL);
-		if (readed == -1)
+		if (gnl.buffer_size == 0 || bf[fd][0] == '\0')
+			gnl.buffer_size = read(fd, bf[fd], BUFFER_SIZE);
+		gnl.index = gnl.buffer_size;
+		if (gnl.buffer_size > 0)
 		{
-			free(line);
-			return (NULL);
+			gnl.buffer_size = 0;
+			while (fd >= 0 && bf[fd][gnl.buffer_size] && bf[fd][gnl.buffer_size] != '\n')
+					gnl.buffer_size++;
+			gnl.index = (gnl.index == gnl.buffer_size);
+			gnl.buffer_size += bf[fd][gnl.buffer_size] == '\n';
+			gnl.line = get_line(gnl.line, bf[fd],  gnl.buffer_size, &gnl.line_size);
 		}
-		if (ft_save_line(buf[fd]))
-			break ;
-		readed = read(fd, buf[fd], BUFFER_SIZE);
 	}
-	return (line);
+	return (gnl.line);
 }
