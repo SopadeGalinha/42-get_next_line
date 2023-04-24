@@ -12,34 +12,31 @@
 
 #include "get_next_line.h"
 
-char *get_next_line(int fd)
+char	*get_next_line(int fd)
 {
-	static char	bf[FOPEN_MAX][BUFFER_SIZE + 1];
-	t_gnl		gnl;
+	static char	f[FOPEN_MAX][BUFFER_SIZE + 1];
+	t_line		d;
 
-	gnl.line = NULL;
-	gnl.index = 1;
-	gnl.read_bytes = 0;
-	gnl.buffer_size = 0;
-
-	while (fd >= 0 && fd < FOPEN_MAX && bf[fd][gnl.buffer_size])
-		gnl.buffer_size++;
-	gnl.line_size = 0;
-	
-	while (fd >= 0 && fd < FOPEN_MAX && gnl.index > 0)
+	d.line = NULL;
+	d.size_buffer = 0;
+	d.index = 1;
+	while (fd >= 0 && fd < FOPEN_MAX && f[fd][d.size_buffer])
+		d.size_buffer++;
+	d.size_line = 0;
+	while (fd >= 0 && fd < FOPEN_MAX && d.index > 0)
 	{
-		if (gnl.buffer_size == 0 || bf[fd][0] == '\0')
-			gnl.buffer_size = read(fd, bf[fd], BUFFER_SIZE);
-		gnl.index = gnl.buffer_size;
-		if (gnl.buffer_size > 0)
+		if (!f[fd][0] || !d.size_buffer)
+			d.size_buffer = read(fd, f[fd], BUFFER_SIZE);
+		d.index = d.size_buffer;
+		if (d.size_buffer > 0)
 		{
-			gnl.buffer_size = 0;
-			while (fd >= 0 && bf[fd][gnl.buffer_size] && bf[fd][gnl.buffer_size] != '\n')
-					gnl.buffer_size++;
-			gnl.index = (gnl.index == gnl.buffer_size);
-			gnl.buffer_size += bf[fd][gnl.buffer_size] == '\n';
-			gnl.line = get_line(gnl.line, bf[fd],  gnl.buffer_size, &gnl.line_size);
+			d.size_buffer = 0;
+			while (f[fd][d.size_buffer] && f[fd][d.size_buffer] != '\n')
+				d.size_buffer++;
+			d.index = (d.index == d.size_buffer);
+			d.size_buffer += f[fd][d.size_buffer] == '\n';
+			d.line = get_line(d.line, f[fd], d.size_buffer, &d.size_line);
 		}
 	}
-	return (gnl.line);
+	return (d.line);
 }

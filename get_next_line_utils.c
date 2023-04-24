@@ -12,31 +12,31 @@
 
 #include "get_next_line.h"
 
-char    *get_line(char *line, char *buffer,  long buffer_size, long *line_size)
+char	*get_line(char *line, char *buffer, long size_buffer, long *size_line)
 {
-    t_gnl g;
+	t_line	data;
 
-    g.line_size = -1;
-    g.index = -1;
-    g.buffer_size = -1;
-    g.line = line;
-    *line_size += buffer_size;
-    line = malloc(sizeof(char) * (*line_size + 1));
-    if (line)
-    {
-        line[*line_size] = 0;
-        while (g.line && g.line[++g.line_size])
-            line[++g.index] = g.line[*line_size];
-        g.line_size = -1;
-		while (buffer && buffer[++g.line_size])
+	data.size_line = -1;
+	data.index = -1;
+	data.size_buffer = -1;
+	data.line = line;
+	*size_line += size_buffer;
+	line = malloc(*size_line + 1 * sizeof(char));
+	if (line)
+	{
+		line[*size_line] = 0;
+		while (data.line && data.line[++data.size_line])
+			line[++data.index] = data.line[data.size_line];
+		data.size_line = -1;
+		while (buffer && buffer[++data.size_line])
 		{
-			if (g.line_size < buffer_size)
-				line[++g.index] = buffer[g.line_size];
+			if (data.size_line < size_buffer)
+				line[++data.index] = buffer[data.size_line];
 			else
-				buffer[++g.buffer_size] = buffer[g.line_size];
-			buffer[g.line_size] = 0;
+				buffer[++data.size_buffer] = buffer[data.size_line];
+			buffer[data.size_line] = 0;
 		}
-    }
-	free(g.line);
+	}
+	free(data.line);
 	return (line);
 }

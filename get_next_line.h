@@ -13,28 +13,26 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# include	<unistd.h>
+# include	<stdlib.h>
+# include   <stdio.h>
+# include	<stdlib.h>
+# include	<unistd.h>
+
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 10
+#  define BUFFER_SIZE   45
 # endif
 
-# include <fcntl.h>
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
-# include <limits.h>
-# include <stddef.h>
-
-typedef struct s_gnl
+typedef struct s_line
 {
 	char	*line;
+	long	size_line;
 	long	index;
-	long	read_bytes;
-	long	buffer_size;
-	long 	line_size;
-} t_gnl;
+	long	size_buffer;
+	long	size_read;
+}	t_line;
 
-char *get_next_line(int fd);
-char    *get_line(char *line, char *buffer,  long buffer_size, long *line_size);
-
+char	*get_line(char *line, char *buffer, long size_buffer, long *size_line);
+char	*get_next_line(int fd);
 
 #endif
