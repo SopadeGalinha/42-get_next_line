@@ -29,7 +29,6 @@ typedef struct s_line
 	long	size_line;
 	long	index;
 	long	size_buffer;
-	long	size_read;
 }	t_line;
 
 char	*get_line(char *line, char *buffer, long size_buffer, long *size_line);
