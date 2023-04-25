@@ -5,38 +5,39 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/15 20:04:21 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/04/15 20:04:21 by jhogonca         ###   ########.fr       */
+/*   Created: 2023/04/25 19:00:37 by jhogonca          #+#    #+#             */
+/*   Updated: 2023/04/25 19:00:37 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "get_next_line.h"
 
-char	*get_line(char *line, char *buffer, long size_buffer, long *size_line)
+static char	*get_line(char *line, char *buffer, long size_buffer, long *size_line)
 {
-	t_line	data;
+	t_line	st;
 
-	data.size_line = -1;
-	data.index = -1;
-	data.size_buffer = -1;
-	data.line = line;
+	st.size_line = -1;
+	st.index = -1;
+	st.size_buffer = -1;
+	st.line = line;
 	*size_line += size_buffer;
 	line = malloc(*size_line + 1 * sizeof(char));
 	if (line)
 	{
 		line[*size_line] = 0;
-		while (data.line && data.line[++data.size_line])
-			line[++data.index] = data.line[data.size_line];
-		data.size_line = -1;
-		while (buffer && buffer[++data.size_line])
+		while (st.line && st.line[++st.size_line])
+			line[++st.index] = st.line[st.size_line];
+		st.size_line = -1;
+		while (buffer && buffer[++st.size_line])
 		{
-			if (data.size_line < size_buffer)
-				line[++data.index] = buffer[data.size_line];
+			if (st.size_line < size_buffer)
+				line[++st.index] = buffer[st.size_line];
 			else
-				buffer[++data.size_buffer] = buffer[data.size_line];
-			buffer[data.size_line] = 0;
+				buffer[++st.size_buffer] = buffer[st.size_line];
+			buffer[st.size_line] = 0;
 		}
 	}
-	free(data.line);
+	free(st.line);
 	return (line);
 }

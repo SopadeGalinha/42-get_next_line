@@ -10,52 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-# include	<unistd.h>
-# include	<stdlib.h>
-# include	<stdlib.h>
-# include	<fcntl.h>
-# include   <stdio.h>
-
-# ifndef BUFFER_SIZE
-#  define BUFFER_SIZE   45
-# endif
-
-typedef struct s_line
-{
-	char	*line;
-	long	size_line;
-	long	index;
-	long	size_buffer;
-}	t_line;
-
-static char	*get_line(char *line, char *buffer, long size_buffer, long *size_line)
-{
-	t_line	st;
-
-	st.size_line = -1;
-	st.index = -1;
-	st.size_buffer = -1;
-	st.line = line;
-	*size_line += size_buffer;
-	line = malloc(*size_line + 1 * sizeof(char));
-	if (line)
-	{
-		line[*size_line] = 0;
-		while (st.line && st.line[++st.size_line])
-			line[++st.index] = st.line[st.size_line];
-		st.size_line = -1;
-		while (buffer && buffer[++st.size_line])
-		{
-			if (st.size_line < size_buffer)
-				line[++st.index] = buffer[st.size_line];
-			else
-				buffer[++st.size_buffer] = buffer[st.size_line];
-			buffer[st.size_line] = 0;
-		}
-	}
-	free(st.line);
-	return (line);
-}
+#include "get_next_line.h"
 
 char	*get_next_line(int fd)
 {
@@ -82,8 +37,9 @@ char	*get_next_line(int fd)
 			st.size_buffer += buf[fd][st.size_buffer] == '\n';
 			st.line = get_line(st.line, buf[fd], st.size_buffer, &st.size_line);
 		}
-		return (st.line);
+		return (st.line);                                                                                                                                                                                                                                                                               
 	}
+	return (st.line);
 }
 
 int main(int argc, char const *argv[])
