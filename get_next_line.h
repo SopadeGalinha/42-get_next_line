@@ -19,17 +19,8 @@
 # include	<unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE   69
+#  define BUFFER_SIZE   1331
 # endif
-
-typedef struct s_gnl
-{
-	char	*line;
-	long	size_line;
-	long	index;
-	long	size_buffer;
-	long	size_read;
-}	t_gnl;
 
 char	*get_next_line(int fd);
 

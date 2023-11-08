@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-char	*process_line(char *new_line, char *buffer, long buffer_size, long *line_length)
+char	*process_line(char *new_line, char *buffer, int buffer_size, int *line_length)
 {
 	char	*line;
 	int		index;
@@ -23,7 +23,7 @@ char	*process_line(char *new_line, char *buffer, long buffer_size, long *line_le
 	size_line = 0;
 	buffer_index = 0;
 	line = new_line;
-	
+
 	// Update the total size of the line to allocate memory for the new 'line'
 	*line_length += buffer_size;
 	new_line = malloc(*line_length + 1 * sizeof(char));
@@ -56,50 +56,55 @@ char	*process_line(char *new_line, char *buffer, long buffer_size, long *line_le
 char	*get_next_line(int fd)
 {
 	// Create a static buffer to store the read lines from the file descriptor with the size of BUFFER_SIZE + 1
-	t_gnl		st;
 	int			flag;
-	static char	buffer[FOPEN_MAX][BUFFER_SIZE + 1]; 
+	int			size_buffer;
+	int			size_line;
+	char		*line;
+	static char	buffer[FOPEN_MAX][BUFFER_SIZE + 1];
 
-	st = (t_gnl){0};	// Initialize all the structure members to 0
 	flag = 1;			// Initialize to 1 to enter the loop
+	size_buffer = 0;
+	line = NULL;
+	size_line = 0;
+	if ((fd < 0 || fd > FOPEN_MAX) || !BUFFER_SIZE) // return null if the fd or buffersize is invalid
+		return (NULL);
 
 	// Loop to find the position of the newline character
-	while (fd >= 0 && fd < FOPEN_MAX && buffer[fd][st.size_buffer])
-		st.size_buffer++;
-	
+	while (buffer[fd][size_buffer])
+		size_buffer++;
 	/*	Loop to read and process lines from the file descriptor
 		- The condition to enter the loop is the flag variable */
-	while (fd >= 0 && fd < FOPEN_MAX && flag > 0)
+	while (flag > 0)
 	{
 		// if the buffer is empty it will read from the file descriptor
 		if (!buffer[fd][0])
-			st.size_buffer = read(fd, buffer[fd], BUFFER_SIZE);
+			size_buffer = read(fd, buffer[fd], BUFFER_SIZE);
 
-		flag = st.size_buffer;  // Update flag with the size of the buffer to control the loop
+		flag = size_buffer;  // Update flag with the size of the buffer to control the loop
 		// if the buffer is not empty it will process the line
-		if (st.size_buffer > 0)
+		if (size_buffer > 0)
 		{
-			st.size_buffer = 0;
+			size_buffer = 0;
 			// Loop to find the position of the newline character
-			while (buffer[fd][st.size_buffer] && buffer[fd][st.size_buffer] != '\n')
-				st.size_buffer++;
+			while (buffer[fd][size_buffer] && buffer[fd][size_buffer] != '\n')
+				size_buffer++;
 
 			/*	flag to control the loop - it will be 0 if the newline character is found and 1 if not
 				- if found (0), the loop will stop after processing the line
 				- if not found (1), the loop will continue  */
-			flag = (flag == st.size_buffer);
+			flag = (flag == size_buffer);
 
 			/*	Update size_buffer with newline count
 				- if the newline character is found the size_buffer will be incremented by 1 to include the newline character
 				- if the newline character is not found the size_buffer will be incremented by 0 
 			*/
-			st.size_buffer += buffer[fd][st.size_buffer] == '\n';
+			size_buffer += buffer[fd][size_buffer] == '\n';
 			
 			// process the line
-			st.line = process_line(st.line, buffer[fd], st.size_buffer, &st.size_line);
+			line = process_line(line, buffer[fd], size_buffer, &size_line);
 		}
 	}
-	return (st.line);
+	return (line);
 }
 
 int main(int argc, char const *argv[])
