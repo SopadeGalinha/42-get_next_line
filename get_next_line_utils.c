@@ -3,13 +3,11 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jhogonca <jhogonca@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jhogonca <jhogonca@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/25 19:00:37 by jhogonca          #+#    #+#             */
-/*   Updated: 2023/04/25 19:00:37 by jhogonca         ###   ########.fr       */
+/*   Created: 2022/02/22 21:07:16 by jhogonca          #+#    #+#             */
+/*   Updated: 2024/11/06 23:38:31 by jhogonca         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
-
-// PLACE HOLDER
+// PLACEHOLDER
